@@ -1,47 +1,36 @@
 #!/bin/sh
+CONF=$HOME/.config
 
 #Update mirrors
-pkg up
+pkg up -y
 
 #Install packages
-pkg install git zsh fastfetch exa ranger tmux
+pkg install -y git zsh fastfetch exa ranger tmux
 
-mkdir .config/
+if [ ! -d "$CONF" ];
+then
+mkdir $HOME/.config
+fi
 
 #Setup termux-nerd-fonts installer
-git clone https://github.com/notflawffles/termux-nerd-installer.git
-cd termux-nerd-installer/
+git clone https://github.com/notflawffles/termux-nerd-installer.git $HOME
+cd $HOME/termux-nerd-installer/ || exit
 make install
 
-#Setup oh-my-zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-#Setup zsh-autosuggestions plugin
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-
 #Copy .zshrc 
-cp ./utils/.zshrc ~/
+cp $HOME/termux_script/utils/.zshrc $HOME
 
 #Copy fastfetch config
-cp -r ./utils/fastfetch/ ~/.config/
+cp -r $HOME/termux_script/utils/fastfetch/ $CONF
 
 #Copy tmux config
-cp -r ./utils/tmux/ ~/.config/
+cp -r $HOME/termux_script/utils/tmux/ $CONF
 
 #Setup NVChad
-git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+git clone https://github.com/NvChad/NvChad $CONF/nvim --depth 1
 
 #Clone dev_files repository
-git clone git@https://github.com/octagony/dev_files.git
+git clone https://github.com/octagony/dev_files.git $HOME
 
 #Copy custom settings
-cp -r ./dev_files/nvchad/custom/ ~/.config/nvim/lua/
-
-
-
-
-
-
-
-
-
+cp -r $HOME/dev_files/nvchad/custom/ $CONF/nvim/lua/
